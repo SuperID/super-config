@@ -4,14 +4,14 @@
 ## 安装
 
 ```bash
-$ npm install super-config --save
+$ npm install super-config-loader --save
 ```
 
 ## 使用方法
 
 
 ```javascript
-var SuperConfig = require('super-config');
+var SuperConfig = require('super-config-loader');
 
 var config = new SuperConfig({
     envName: '用于获取当前版本的环境变量名，默认APP_VERSION',

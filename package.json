@@ -1,5 +1,5 @@
 {
-  "name": "super-config",
+  "name": "super-config-loader",
   "version": "0.0.1",
   "description": "powerful configuration loader for Node.js",
   "main": "./lib/index.js",
