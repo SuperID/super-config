@@ -71,6 +71,14 @@ console.log(c.projects());
 {path}/{project}/{version}.js
 ```
 
+其中：
+
++ `{path}`为当前配置的根目录
++ `{common_project}`为公共的项目名称，默认为`_common`
++ `{common_version}`为公共的版本名称，默认为`_common`
++ `{project}`为当前的项目名称
++ `{version}`为当前的版本名称
+
 如果存在相同的配置项，则后加载的配置会覆盖先加载的。
 
 每个配置文件的格式如下：
@@ -101,6 +109,7 @@ module.exports = function (ns, load) {
 };
 ```
 
+详细使用方法可以参考`test`目录下的测试文件。
 
 
 ## License
