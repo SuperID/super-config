@@ -105,5 +105,21 @@ describe('SuperConfig', function () {
     assert.ok(c.get('loaded.group2'));
   });
 
+  it('#7 在配置文件中使用load()', function () {
+    support.setEnv('APP_VERSION', 'release');
+    var config = new support.SuperConfig({
+      paths: support.configPath('config_1'),
+      project: 'project_1'
+    });
+    var c = config.getProject('project_1');
+    assert.ok(c.get('loaded._common._common'));
+    assert.ok(c.get('loaded._common.dev'));
+    assert.ok(c.get('loaded._common.release'));
+    assert.ok(c.get('loaded.project_1._common'));
+    assert.ok(c.get('loaded.project_1.dev'));
+    assert.ok(c.get('loaded.project_1.release'));
+    assert.equal(c.get('loaded.config_1'),'_common.release');
+  });
+
 });
 
