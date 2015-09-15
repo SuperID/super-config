@@ -121,5 +121,17 @@ describe('SuperConfig', function () {
     assert.equal(c.get('loaded.config_1'),'_common.release');
   });
 
+  it('#8 在配置文件中使用load()，加载不存在的文件出错', function () {
+    try {
+      support.setEnv('APP_VERSION', 'release');
+      var config = new support.SuperConfig({
+        paths: support.configPath('config_3'),
+        project: 'project_1'
+      });
+      var c = config.getProject('project_1');
+      throw new Error('要load的文件不存在，应该抛出异常');
+    } catch (err) {}
+  });
+
 });
 
