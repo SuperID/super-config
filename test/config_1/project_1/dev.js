@@ -6,6 +6,8 @@ module.exports = function (ns, load) {
 
   if (ns.env.group === 1) {
     ns('loaded.group1', true);
+  } else if (ns.env.group === 2) {
+    ns('loaded.group2', true);
   }
 
 };

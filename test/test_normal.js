@@ -88,5 +88,22 @@ describe('SuperConfig', function () {
     assert.ok(c.get('loaded.group1'));
   });
 
+  it('#6 更改envVersion和envConfigName名字', function () {
+    support.setEnv('APP_VERSION', 'xxx');
+    support.setEnv('APP_CONFIG', '');
+    support.setEnv('NEW_VERSION', 'dev');
+    support.setEnv('NEW_CONFIG', JSON.stringify({group: 2}));
+    var config = new support.SuperConfig({
+      paths: support.configPath('config_1'),
+      project: 'project_1',
+      envName: 'NEW_VERSION',
+      envConfigName: 'NEW_CONFIG'
+    });
+    var c = config.getProject('project_1');
+    var v = c.get('random.value');
+    assert.equal(config.getProject('project_1').get('random.value'), v);
+    assert.ok(c.get('loaded.group2'));
+  });
+
 });
 
