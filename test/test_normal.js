@@ -66,5 +66,27 @@ describe('SuperConfig', function () {
     assert.equal(config.getProject('project_1').get('random.value'), v);
   });
 
+  it('#5 测试额外配置envConfig', function () {
+    support.setEnv('APP_VERSION', 'dev');
+
+    try {
+      support.setEnv('APP_CONFIG', 'dev');
+      var config = new support.SuperConfig({
+        paths: support.configPath('config_1'),
+        project: 'project_1'
+      });
+      var c = config.getProject('project_1');
+      throw new Error('解析env出错，此处应该抛出异常');
+    } catch (err) {}
+
+    support.setEnv('APP_CONFIG', JSON.stringify({group: 1}));
+    var config = new support.SuperConfig({
+      paths: support.configPath('config_1'),
+      project: 'project_1'
+    });
+    var c = config.getProject('project_1');
+    assert.ok(c.get('loaded.group1'));
+  });
+
 });
 

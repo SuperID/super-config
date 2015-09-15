@@ -4,4 +4,8 @@ module.exports = function (ns, load) {
 
   ns('random.value', Math.random());
 
+  if (ns.env.group === 1) {
+    ns('loaded.group1', true);
+  }
+
 };
