@@ -1,59 +1,58 @@
 # super-config
 配置文件加载器
 
+## 安装
+
+```bash
+$ npm install super-config --save
+```
+
 ## 使用方法
 
-### 依赖
-
-在 `SIDServer` 和 `SIDAdmin` 这类级别的项目的 `package.json` 中添加依赖 `"@superid/config": "latest"`
-
-每次 `deploy` 时均会安装最新版本的 `@superid/config`
-
-其他模块如 `@superid/orm` 在初始化时需要加载 `@superid/config` 来取得配置，但由于 `@superid/orm` 是需要在 `SIDServer` 这样的项目中
-使用，因此其 `package.json` 文件中不需要声明对 `@superid/config` 的依赖。
-
-### 部署
-
-设置运行环境 `NODE_ENV=development` 来指定配置文件版本，比如：
-
-+ `development` 本地开发环境
-+ `production` 服务器生产环境（默认）
-+ `production-server1` server1服务器的生产环境
-+ `v1` v1版本生产环境
-+ `test` 内部测试环境
-
-程序中使用配置：
 
 ```javascript
-// 载入配置，会自动根据 NODE_ENV 加载指定的配置
-var config = require('@superid/config');
+var SuperConfig = require('super-config');
 
-// 设置当前项目名
-config.setProject('SIDServer');
+var config = new SuperConfig({
+    envName: '用于获取当前版本的环境变量名，默认APP_VERSION',
+    envConfigName: '用于获取当前额外配置信息的环境变量名，默认APP_CONFIG',
+    project: '项目名，默认无',
+    paths: '当前配置文件目录，默认为["./config"]，依次从这些目录中加载配置文件',
+    commonProject: '公共配置项目名，默认_common',
+    commonVersion: '公共配置版本名，默认_common'
+});
 
-// 读取当前项目配置项
-console.log(config.get('web.port'));
-// 判断配置项是否被设置
-console.log(config.defined('web.port'));
-// 设置当前项目配置项
-config.set('web.port', 3001);
-// 取得当前项目主版本列表
-console.log(config.versions());
-// 取得其他项目的版本列表
-console.log(config.versions('SIDAdmin'));
-
-// 取得其他项目的配置项（与当前项目相同版本）
-console.log(config.getProject('SIDAdmin').get('web.port'));
-// 设置其他项目的配置项（与当前项目相同版本）
-config.getProject('SIDAdmin').set('web.port', 3001);
-
-// 取得其他项目的配置项（指定版本）
-console.log(config.getProject('SIDAdmin', 'v1').get('web.port'));
-// 设置其他项目的配置项（指定版本）
-config.getProject('SIDAdmin', 'v1').set('web.port', 3001);
-
-// 取得所有项目列表
+// 获取指定项目的配置（版本号从环境变量APP_VERSION中获取）
+console.log(config.getProject('my_project'));
+// 获取指定项目的配置，指定版本号
+console.log(config.getProject('my_project', 'v1'));
+// 返回项目列表数组
 console.log(config.projects());
+
+// 操作配置对象--------------------------------------------------
+var c = config.getProject('my_project', 'v1');
+// 获得指定配置项，如果配置项不存在会抛出异常
+console.log(c.get('a.b.c'));
+// 检查指定配置项是否存在
+console.log(c.defined('a.b.c'));
+// 取所有配置，返回一个对象
+console.log(c.all());
+// 更改配置
+c.set('a.b.c.d', 'new value');
+// 取当前项目的所有版本列表，返回数组
+console.log(c.versions());
+// 取当前配置的项目名称
+console.log(c.getProjectName());
+// 取当前配置的版本名称
+console.log(c.getVersionName());
+// 检查当前项目指定版本是否存在
+console.log(c.versionExists('v2'));
+// 取其他项目的配置对象（与当前配置的版本相同）
+console.log(c.getProject('project_2'));
+// 取其他项目的配置对象，指定版本名称
+console.log(c.getProject('project_2', 'v2'));
+// 返回项目列表数组
+console.log(c.projects());
 ```
 
 如果指定项目及版本的配置文件不存在，抛出异常并结束程序。
@@ -63,4 +62,69 @@ console.log(config.projects());
 
 基本格式：`config/{project}/{version}.js` ，比如：`config/SIDServer/production.js`
 
-其中`version`为`_default.js`
+在载入配置文件时，会依次按照配置的`paths`路径，检查以下文件是否存在并加载：
+
+```
+{path}/{common_Project}/{common_version}.js
+{path}/{common_project}/{version}.js
+{path}/{project}/{common_version}.js
+{path}/{project}/{version}.js
+```
+
+如果存在相同的配置项，则后加载的配置会覆盖先加载的。
+
+每个配置文件的格式如下：
+
+```javascript
+module.exports = function (ns, load) {
+
+  // 设置配置
+  ns('a.b.c.d', '12345');
+  // 引用配置
+  ns('a.b.c.e', ns('a.b.c.d') + '789');
+
+  // 判断配置项是否已存在
+  if (ns.defined('a.b.c.d')) {
+    ns('a.b.c.f', 555);
+  }
+
+  // 读取通过环境变量传递过来的额外配置
+  // 比如 APP_CONFIG={"group":"1"}
+  // 必须为一个正确的JSON字符串，可以通过ns.env访问解析出来的对象
+  if (ns.env.group === '1') {
+    ns('isGroup1', true);
+  }
+
+  // 载入同目录下的其他版本文件
+  load('v2');
+
+};
+```
+
+
+
+## License
+
+```
+The MIT License (MIT)
+
+Copyright (c) 2015 SuperID | 一切只为简单登录
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
