@@ -53,7 +53,17 @@ describe('SuperConfig', function () {
     assert.equal(c.get('loaded.config5'),'_common2.dev');
     assert.equal(c.get('loaded.config6'),'project_2._common');
     assert.equal(c.get('loaded.config7'),'project_2.dev');
+  });
 
+  it('#4 自动缓存已加载过的配置', function () {
+    support.setEnv('APP_VERSION', 'dev');
+    var config = new support.SuperConfig({
+      paths: support.configPath('config_1'),
+      project: 'project_1'
+    });
+    var c = config.getProject('project_1');
+    var v = c.get('random.value');
+    assert.equal(config.getProject('project_1').get('random.value'), v);
   });
 
 });
