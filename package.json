@@ -1,0 +1,28 @@
+{
+  "name": "super-config",
+  "version": "0.0.1",
+  "description": "powerful configuration loader for Node.js",
+  "main": "./lib/index.js",
+  "scripts": {
+    "test": "mocha -t 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuperID/super-config.git"
+  },
+  "keywords": [
+    "config",
+    "loader"
+  ],
+  "author": "Zongmin Lei <leizongmin@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SuperID/super-config/issues"
+  },
+  "homepage": "https://github.com/SuperID/super-config#readme",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "lei-ns": "^0.1.2",
+    "rd": "0.0.2"
+  }
+}
