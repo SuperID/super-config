@@ -14,12 +14,13 @@ $ npm install super-config-loader --save
 var SuperConfig = require('super-config-loader');
 
 var config = new SuperConfig({
-    envName: '用于获取当前版本的环境变量名，默认APP_VERSION',
-    envConfigName: '用于获取当前额外配置信息的环境变量名，默认APP_CONFIG',
-    project: '项目名，默认无',
-    paths: '当前配置文件目录，默认为["./config"]，依次从这些目录中加载配置文件',
-    commonProject: '公共配置项目名，默认_common',
-    commonVersion: '公共配置版本名，默认_common'
+    envName: 'APP_VERSION', // 用于获取当前版本的环境变量名，默认APP_VERSION
+    envConfigName: 'APP_CONFIG', // 用于获取当前额外配置信息的环境变量名，默认APP_CONFIG
+    project: null, // 项目名，默认null
+    paths: ['./config'], // 当前配置文件目录，默认为['./config']，依次从这些目录中加载配置文件
+    commonProject: '_common', // 公共配置项目名，默认_common
+    commonVersion: '_common', // 公共配置版本名，默认_common',
+    disableCache: false, // 是否关闭缓存，如果关闭了则每次getProject()时均重新读取文件，默认false
 });
 
 // 获取指定项目的配置（版本号从环境变量APP_VERSION中获取）

@@ -55,7 +55,7 @@ describe('SuperConfig', function () {
     assert.equal(c.get('loaded.config7'),'project_2.dev');
   });
 
-  it('#4 自动缓存已加载过的配置', function () {
+  it('#4.1 自动缓存已加载过的配置', function () {
     support.setEnv('APP_VERSION', 'dev');
     var config = new support.SuperConfig({
       paths: support.configPath('config_1'),
@@ -64,6 +64,18 @@ describe('SuperConfig', function () {
     var c = config.getProject('project_1');
     var v = c.get('random.value');
     assert.equal(config.getProject('project_1').get('random.value'), v);
+  });
+
+  it('#4.2 不缓存已加载过的配置', function () {
+    support.setEnv('APP_VERSION', 'dev');
+    var config = new support.SuperConfig({
+      paths: support.configPath('config_1'),
+      project: 'project_1',
+      disableCache: true
+    });
+    var c = config.getProject('project_1');
+    var v = c.get('random.value');
+    assert.notEqual(config.getProject('project_1').get('random.value'), v);
   });
 
   it('#5 测试额外配置envConfig', function () {
