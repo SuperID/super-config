@@ -56,12 +56,10 @@ console.log(c.getProject('project_2', 'v2'));
 console.log(c.projects());
 ```
 
-如果指定项目及版本的配置文件不存在，抛出异常并结束程序。
-
 
 ## 文件结构
 
-基本格式：`config/{project}/{version}.js` ，比如：`config/SIDServer/production.js`
+基本格式：`{path}/{project}/{version}.js` ，比如：`{path}/SIDServer/production.js`
 
 在载入配置文件时，会依次按照配置的`paths`路径，检查以下文件是否存在并加载：
 
