@@ -35,7 +35,7 @@ var c = config.getProject('my_project', 'v1');
 // 获得指定配置项，如果配置项不存在会抛出异常
 console.log(c.get('a.b.c'));
 // 检查指定配置项是否存在
-console.log(c.defined('a.b.c'));
+console.log(c.has('a.b.c'));
 // 取所有配置，返回一个对象
 console.log(c.all());
 // 更改配置
@@ -93,7 +93,7 @@ module.exports = function (ns, load) {
   ns('a.b.c.e', ns('a.b.c.d') + '789');
 
   // 判断配置项是否已存在
-  if (ns.defined('a.b.c.d')) {
+  if (ns.has('a.b.c.d')) {
     ns('a.b.c.f', 555);
   }
 
