@@ -98,8 +98,10 @@ module.exports = function (ns, load) {
   // 读取通过环境变量传递过来的额外配置
   // 比如 APP_CONFIG={"group":"1"}
   // 必须为一个正确的JSON字符串，可以通过ns.env访问解析出来的对象
-  if (ns.env.group === '1') {
-    ns('isGroup1', true);
+  if (ns.env.has('group')) {
+    if (ns.env('group') === '1') {
+      ns('isGroup1', true);
+    }
   }
 
   // 载入同目录下的其他版本文件
